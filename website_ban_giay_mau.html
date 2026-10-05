@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SoleStyle - Shop Giày Dép</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#f6f7fb;color:#222}
+button,input,select{font:inherit}
+button{cursor:pointer}
+header{background:#111;color:#fff;position:sticky;top:0;z-index:20;box-shadow:0 2px 10px #0002}
+.nav{max-width:1200px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:16px 20px;gap:20px}
+.logo{font-size:25px;font-weight:800;letter-spacing:.5px}
+.logo span{color:#ff5a36}
+.navlinks{display:flex;gap:22px}
+.navlinks a{color:#fff;text-decoration:none;font-size:14px}
+.cart-btn{background:#ff5a36;border:0;color:white;border-radius:9px;padding:10px 14px;font-weight:bold}
+.hero{background:linear-gradient(120deg,#171717,#333);color:#fff}
+.hero-inner{max-width:1200px;margin:auto;padding:70px 20px;display:flex;align-items:center;justify-content:space-between;gap:40px}
+.hero h1{font-size:48px;line-height:1.08;margin-bottom:18px}
+.hero p{color:#ddd;max-width:520px;line-height:1.6;margin-bottom:25px}
+.primary{background:#ff5a36;color:#fff;border:0;border-radius:10px;padding:13px 20px;font-weight:bold}
+.hero-shoe{font-size:130px;filter:drop-shadow(0 18px 18px #0008)}
+.container{max-width:1200px;margin:auto;padding:35px 20px}
+.section-title{font-size:28px;margin-bottom:20px}
+.tools{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:25px}
+.search{flex:1;min-width:220px;padding:12px 14px;border:1px solid #ddd;border-radius:9px;background:#fff}
+select{padding:12px;border:1px solid #ddd;border-radius:9px;background:#fff}
+.products{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.card{background:#fff;border-radius:15px;overflow:hidden;box-shadow:0 3px 15px #0000000d;transition:.2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 8px 25px #0002}
+.product-img{height:190px;background:linear-gradient(135deg,#eee,#fafafa);display:flex;align-items:center;justify-content:center;font-size:90px}
+.card-body{padding:16px}
+.badge{display:inline-block;background:#fff0eb;color:#ff5a36;border-radius:20px;padding:5px 9px;font-size:11px;font-weight:bold;margin-bottom:8px}
+.card h3{font-size:17px;margin-bottom:8px}
+.price{font-size:18px;font-weight:800;margin-bottom:13px}
+.old{font-size:12px;text-decoration:line-through;color:#999;margin-left:6px;font-weight:normal}
+.card-actions{display:flex;gap:8px}
+.card-actions button{flex:1;padding:10px;border-radius:8px;border:1px solid #ddd;background:#fff}
+.card-actions .buy{background:#111;color:#fff;border-color:#111}
+.empty{padding:40px;text-align:center;color:#777;background:#fff;border-radius:12px;grid-column:1/-1}
+.about{margin-top:45px;background:#fff;border-radius:15px;padding:28px;line-height:1.7}
+footer{background:#111;color:#aaa;margin-top:50px;padding:30px 20px;text-align:center}
+.overlay{display:none;position:fixed;inset:0;background:#0008;z-index:50}
+.modal{position:absolute;right:0;top:0;height:100%;width:min(440px,100%);background:#fff;padding:25px;overflow:auto}
+.overlay.show{display:block}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.close{border:0;background:#eee;border-radius:50%;width:34px;height:34px}
+.cart-item{display:flex;gap:12px;border-bottom:1px solid #eee;padding:14px 0}
+.cart-emoji{width:65px;height:65px;background:#f3f3f3;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:35px}
+.cart-info{flex:1}
+.qty{display:flex;align-items:center;gap:8px;margin-top:8px}
+.qty button{width:27px;height:27px;border:1px solid #ddd;background:#fff;border-radius:6px}
+.total{font-size:20px;font-weight:bold;margin:20px 0}
+.checkout{width:100%;padding:13px;border:0;background:#ff5a36;color:#fff;border-radius:9px;font-weight:bold}
+.form{display:none;margin-top:20px}
+.form input,.form textarea{width:100%;padding:11px;margin-bottom:10px;border:1px solid #ddd;border-radius:8px}
+.form textarea{height:75px;resize:none}
+.toast{position:fixed;right:20px;bottom:20px;background:#111;color:#fff;padding:13px 18px;border-radius:9px;display:none;z-index:100}
+.toast.show{display:block}
+@media(max-width:900px){.products{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:38px}.hero-shoe{font-size:90px}}
+@media(max-width:600px){.navlinks{display:none}.hero-inner{padding:45px 20px}.hero-shoe{display:none}.products{grid-template-columns:1fr}.container{padding:28px 15px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo">Sole<span>Style</span></div>
+    <div class="navlinks">
+      <a href="#home">Trang chủ</a>
+      <a href="#products">Sản phẩm</a>
+      <a href="#about">Giới thiệu</a>
+    </div>
+    <button class="cart-btn" onclick="openCart()">🛒 Giỏ hàng (<span id="cartCount">0</span>)</button>
+  </div>
+</header>
+
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div>
+      <h1>Phong cách bắt đầu từ đôi giày.</h1>
+      <p>Khám phá những mẫu giày thể thao, sneaker và giày thời trang nổi bật với thiết kế hiện đại, trẻ trung và dễ phối đồ.</p>
+      <button class="primary" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Xem sản phẩm →</button>
+    </div>
+    <div class="hero-shoe">👟</div>
+  </div>
+</section>
+
+<main class="container" id="products">
+  <h2 class="section-title">Sản phẩm nổi bật</h2>
+  <div class="tools">
+    <input class="search" id="search" placeholder="🔍 Tìm tên giày..." oninput="renderProducts()">
+    <select id="category" onchange="renderProducts()">
+      <option value="all">Tất cả loại</option>
+      <option value="Sneaker">Sneaker</option>
+      <option value="Thể thao">Thể thao</option>
+      <option value="Chạy bộ">Chạy bộ</option>
+      <option value="Dép">Dép</option>
+    </select>
+    <select id="sort" onchange="renderProducts()">
+      <option value="default">Sắp xếp</option>
+      <option value="low">Giá thấp → cao</option>
+      <option value="high">Giá cao → thấp</option>
+    </select>
+  </div>
+  <div class="products" id="productList"></div>
+
+  <div class="about" id="about">
+    <h2>Về SoleStyle</h2>
+    <p>Website mẫu bán giày dép được xây dựng bằng HTML, CSS và JavaScript trong một file duy nhất. Bạn có thể dùng mẫu này để học tập, làm đồ án hoặc tiếp tục nâng cấp thành website bán hàng thật.</p>
+  </div>
+</main>
+
+<footer>
+  <p>© 2026 SoleStyle — Website bán giày dép mẫu</p>
+  <p style="margin-top:8px">Hotline: 0123 456 789 · Email: support@solestyle.vn</p>
+</footer>
+
+<div class="overlay" id="cartOverlay" onclick="closeCart(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <h2>🛒 Giỏ hàng</h2>
+      <button class="close" onclick="closeCart()">×</button>
+    </div>
+    <div id="cartItems"></div>
+    <div class="total">Tổng: <span id="cartTotal">0₫</span></div>
+    <button class="checkout" onclick="showForm()">Tiến hành đặt hàng</button>
+    <div class="form" id="orderForm">
+      <h3 style="margin-bottom:12px">Thông tin nhận hàng</h3>
+      <input id="customerName" placeholder="Họ và tên">
+      <input id="customerPhone" placeholder="Số điện thoại">
+      <textarea id="customerAddress" placeholder="Địa chỉ nhận hàng"></textarea>
+      <button class="checkout" onclick="placeOrder()">Xác nhận đặt hàng</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const products = [
+ {id:1,name:"Air Runner X",cat:"Chạy bộ",price:1290000,old:1590000,emoji:"👟"},
+ {id:2,name:"Urban Sneaker White",cat:"Sneaker",price:990000,old:1190000,emoji:"👟"},
+ {id:3,name:"Street Black Pro",cat:"Sneaker",price:1150000,old:1390000,emoji:"👟"},
+ {id:4,name:"Sport Max 2026",cat:"Thể thao",price:1490000,old:1790000,emoji:"👟"},
+ {id:5,name:"Classic Canvas",cat:"Sneaker",price:690000,old:850000,emoji:"👟"},
+ {id:6,name:"Speed Runner",cat:"Chạy bộ",price:1090000,old:1290000,emoji:"👟"},
+ {id:7,name:"Court Master",cat:"Thể thao",price:1350000,old:1590000,emoji:"👟"},
+ {id:8,name:"Summer Slide",cat:"Dép",price:390000,old:490000,emoji:"🩴"}
+];
+
+let cart = JSON.parse(localStorage.getItem("soleStyleCart") || "[]");
+
+function money(n){return n.toLocaleString("vi-VN")+"₫"}
+
+function renderProducts(){
+  const key=document.getElementById("search").value.toLowerCase().trim();
+  const cat=document.getElementById("category").value;
+  const sort=document.getElementById("sort").value;
+  let list=products.filter(p=>
+    p.name.toLowerCase().includes(key) && (cat==="all" || p.cat===cat)
+  );
+  if(sort==="low") list.sort((a,b)=>a.price-b.price);
+  if(sort==="high") list.sort((a,b)=>b.price-a.price);
+
+  const box=document.getElementById("productList");
+  if(!list.length){box.innerHTML='<div class="empty">Không tìm thấy sản phẩm phù hợp.</div>';return}
+  box.innerHTML=list.map(p=>`
+    <div class="card">
+      <div class="product-img">${p.emoji}</div>
+      <div class="card-body">
+        <span class="badge">${p.cat}</span>
+        <h3>${p.name}</h3>
+        <div class="price">${money(p.price)} <span class="old">${money(p.old)}</span></div>
+        <div class="card-actions">
+          <button onclick="addToCart(${p.id})">Thêm giỏ</button>
+          <button class="buy" onclick="buyNow(${p.id})">Mua ngay</button>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function saveCart(){localStorage.setItem("soleStyleCart",JSON.stringify(cart));updateCart()}
+function addToCart(id){
+  const item=cart.find(x=>x.id===id);
+  if(item)item.qty++;
+  else cart.push({id,qty:1});
+  saveCart(); toast("Đã thêm sản phẩm vào giỏ hàng!");
+}
+function buyNow(id){addToCart(id);openCart()}
+function updateCart(){
+  document.getElementById("cartCount").textContent=cart.reduce((s,x)=>s+x.qty,0);
+  const box=document.getElementById("cartItems");
+  if(!cart.length){box.innerHTML='<p style="text-align:center;color:#777;padding:30px 0">Giỏ hàng đang trống.</p>';document.getElementById("cartTotal").textContent="0₫";return}
+  let total=0;
+  box.innerHTML=cart.map(item=>{
+    const p=products.find(x=>x.id===item.id);
+    total+=p.price*item.qty;
+    return `<div class="cart-item">
+      <div class="cart-emoji">${p.emoji}</div>
+      <div class="cart-info">
+        <b>${p.name}</b><div>${money(p.price)}</div>
+        <div class="qty">
+          <button onclick="changeQty(${p.id},-1)">−</button>
+          <span>${item.qty}</span>
+          <button onclick="changeQty(${p.id},1)">+</button>
+          <button style="margin-left:auto" onclick="removeItem(${p.id})">🗑️</button>
+        </div>
+      </div>
+    </div>`
+  }).join("");
+  document.getElementById("cartTotal").textContent=money(total);
+}
+function changeQty(id,n){
+  const item=cart.find(x=>x.id===id);
+  item.qty+=n;if(item.qty<=0)cart=cart.filter(x=>x.id!==id);
+  saveCart();
+}
+function removeItem(id){cart=cart.filter(x=>x.id!==id);saveCart()}
+function openCart(){updateCart();document.getElementById("cartOverlay").classList.add("show")}
+function closeCart(e){if(!e || e.target===document.getElementById("cartOverlay"))document.getElementById("cartOverlay").classList.remove("show")}
+function showForm(){
+  if(!cart.length){toast("Giỏ hàng đang trống!");return}
+  document.getElementById("orderForm").style.display="block";
+}
+function placeOrder(){
+  const n=document.getElementById("customerName").value.trim();
+  const p=document.getElementById("customerPhone").value.trim();
+  const a=document.getElementById("customerAddress").value.trim();
+  if(!n||!p||!a){toast("Vui lòng nhập đầy đủ thông tin!");return}
+  cart=[];saveCart();
+  document.getElementById("orderForm").style.display="none";
+  document.getElementById("cartOverlay").classList.remove("show");
+  toast("🎉 Đặt hàng thành công! Cảm ơn bạn.");
+}
+let toastTimer;
+function toast(msg){
+  const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2200);
+}
+renderProducts();updateCart();
+</script>
+</body>
+</html>
